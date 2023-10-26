@@ -9,7 +9,7 @@
 /* font-family: 'Poppins', sans-serif; */
 /* font-family: 'Playfair Display', serif; */
 
-/* navbar css */
+/* //navbar css */
 .navbar {
   font-family: "Poppins", sans-serif;
   font-size: 17px;
@@ -33,8 +33,9 @@
   font-family: "roboto", sans-serif;
   letter-spacing: 3px;
 }
+/* =============================
+==========footer============= */
 
-/* footer */
 .footer {
   color: white;
   padding: 25px;
@@ -57,8 +58,8 @@
   color: #ffefba;
   border-bottom: 1px solid #ffefba;
 }
-
-/* 404 page */
+/* =================================
+======== page not found css ======= */
 .pnf {
   display: flex;
   min-height: 65vh;
@@ -87,8 +88,8 @@
   background-color: black;
   color: white;
 }
-
-/* contact */
+/* ========================================= */
+/* =========contact us ========= */
 .contactus {
   margin: 0;
   padding: 0;
@@ -98,11 +99,7 @@
   justify-content: center;
 }
 
-/* register */
-.register {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  height: 70vh;
-  flex-direction: column;
+.product-link {
+  text-decoration: none !important;
+  color: black !important;
 }

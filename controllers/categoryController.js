@@ -10,7 +10,7 @@ export const createCategoryController = async (req, res) => {
     const existingCategory = await categoryModel.findOne({ name });
     if (existingCategory) {
       return res.status(200).send({
-        susscess: false,
+        success: false,
         message: "Category already exists",
       });
     }
@@ -19,14 +19,14 @@ export const createCategoryController = async (req, res) => {
       slug: slugify(name),
     }).save();
     res.status(200).send({
-      susscess: true,
+      success: true,
       message: "New category created",
       category,
     });
   } catch (error) {
     console.log(error);
     res.status(500).send({
-      susscess: false,
+      success: false,
       error,
       message: "Error in category",
     });
@@ -47,14 +47,14 @@ export const updateCategoryController = async (req, res) => {
       { new: true }
     );
     res.status(200).send({
-      susscess: true,
+      success: true,
       message: "Category updated",
       category,
     });
   } catch (error) {
     console.log(error);
     res.status(500).send({
-      susscess: false,
+      success: false,
       error,
       message: "Error while update category",
     });
@@ -66,14 +66,14 @@ export const categoryControlller = async (req, res) => {
   try {
     const category = await categoryModel.find({});
     res.status(200).send({
-      susscess: true,
+      success: true,
       message: "All category list",
       category,
     });
   } catch (error) {
     console.log(error);
     res.status(500).send({
-      susscess: false,
+      success: false,
       error,
       message: "Error while get all categories",
     });
