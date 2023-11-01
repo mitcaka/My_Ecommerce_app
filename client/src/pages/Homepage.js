@@ -4,6 +4,8 @@ import axios from "axios";
 import toast from "react-hot-toast";
 import { Checkbox, Radio } from "antd";
 import { Prices } from "./../components/Prices";
+import { useNavigate } from "react-router-dom";
+import { useCart } from "../context/cart";
 
 const HomePage = () => {
   const [products, setProducts] = useState([]);
@@ -13,6 +15,8 @@ const HomePage = () => {
   const [total, setTotal] = useState(0);
   const [page, setPage] = useState(1);
   const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
+  const [cart, setCart] = useCart();
   //get all category
   const getAllCategory = async () => {
     try {
@@ -37,10 +41,6 @@ const HomePage = () => {
       const { data } = await axios.get(
         `${process.env.REACT_APP_API}/api/v1/product/product-list/${page}`
       );
-      console.log(
-        `${process.env.REACT_APP_API}/api/v1/product/product-list/${page}`
-      );
-      console.log(data.products);
       setLoading(false);
       setProducts(data.products);
     } catch (error) {
@@ -164,10 +164,23 @@ const HomePage = () => {
                     {p.description.substring(0, 30)}...
                   </p>
                   <p className="card-text">${p.price}</p>
-                  <button href="#" className="btn btn-primary ms-1">
+                  <button
+                    onClick={() => navigate(`/product/${p.slug}`)}
+                    className="btn btn-primary ms-1"
+                  >
                     More Details
                   </button>
-                  <button href="#" className="btn btn-secondary ms-1">
+                  <button
+                    onClick={() => {
+                      setCart([...cart, p]);
+                      localStorage.setItem(
+                        "cart",
+                        JSON.stringify([...cart, p])
+                      );
+                      toast.success("Item added to cart");
+                    }}
+                    className="btn btn-secondary ms-1"
+                  >
                     ADD TO CARD
                   </button>
                 </div>
