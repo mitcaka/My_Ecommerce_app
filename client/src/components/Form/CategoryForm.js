@@ -1,14 +1,18 @@
 import React from "react";
+import TextField from "@mui/material/TextField";
 
 const CategoryForm = ({ handleSubmit, value, setValue }) => {
   return (
     <>
       <form onSubmit={handleSubmit}>
         <div className="mb-3">
-          <input
+          <TextField
+            id="outlined-basic"
+            label="Tên danh mục"
+            variant="outlined"
             type="text"
             className="form-control"
-            placeholder="Enter new category"
+            placeholder="Nhập tên danh mục"
             value={value}
             onChange={(e) => setValue(e.target.value)}
           />

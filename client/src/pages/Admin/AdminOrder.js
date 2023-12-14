@@ -6,6 +6,12 @@ import Layout from "../../components/Layout/Layout";
 import { useAuth } from "../../context/auth";
 import moment from "moment";
 import { Select } from "antd";
+import { DataGrid, GridColDef, GridValueGetterParams } from "@mui/x-data-grid";
+import OrderDetails from "../../components/Form/OrderDetails";
+import { Modal } from "antd";
+import Button from "@mui/material/Button";
+import Typography from "@mui/material/Typography";
+
 const { Option } = Select;
 
 const AdminOrders = () => {
@@ -19,12 +25,16 @@ const AdminOrders = () => {
   const [changeStatus, setCHangeStatus] = useState("");
   const [orders, setOrders] = useState([]);
   const [auth, setAuth] = useAuth();
+  const [orderProduct, setOrderProduct] = useState(null);
+  const [visible, setVisible] = useState(false);
+
   const getOrders = async () => {
     try {
       const { data } = await axios.get(
         `${process.env.REACT_APP_API}/api/v1/auth/all-orders`
       );
       setOrders(data);
+      console.log(data);
     } catch (error) {
       console.log(error);
     }
@@ -47,81 +57,111 @@ const AdminOrders = () => {
       console.log(error);
     }
   };
+
+  const getRowId = (row) => row._id;
+  const columns = [
+    {
+      field: "checkStatus",
+      headerName: "Trạng thái",
+      width: 130,
+      renderCell: (params) => (
+        <Select
+          bordered={false}
+          onChange={(value) => handleChange(params.row._id, value)}
+          defaultValue={params.row.status}
+        >
+          {status.map((s, i) => (
+            <Option key={i} value={s}>
+              {s}
+            </Option>
+          ))}
+        </Select>
+      ),
+    },
+    {
+      field: "buyer",
+      headerName: "Khách hàng",
+      width: 120,
+      valueGetter: (params) => params.row.buyer.name,
+    },
+    { field: "createdAt", headerName: "Ngày đặt", width: 180 },
+    {
+      field: "payment",
+      headerName: "Thanh toán",
+      width: 150,
+      valueGetter: (params) => {
+        return params.row.payment.success ? "Thành công" : "Thất bại";
+      },
+    },
+    {
+      field: "products.length",
+      headerName: "Tổng tiền",
+      width: 130,
+      valueGetter: (params) => {
+        return formatCurrency(calculateTotalPrice(params.row.products));
+      },
+    },
+    {
+      field: "openModal",
+      headerName: "Action",
+      width: 150,
+      renderCell: (params) => (
+        <Button
+          variant="outlined"
+          onClick={() => handleOpenModal(params.row.products)}
+        >
+          Xem sản phẩm
+        </Button>
+      ),
+    },
+  ];
+
+  const handleOpenModal = (products) => {
+    setVisible(true);
+    setOrderProduct(products);
+  };
+
+  function formatCurrency(amount) {
+    return amount.toLocaleString("vi-VN", {
+      style: "currency",
+      currency: "VND",
+    });
+  }
+
+  function calculateTotalPrice(arr) {
+    const totalPrice = arr.reduce((sum, product) => sum + product.price, 0);
+    return totalPrice;
+  }
+
   return (
     <Layout title={"Đơn hàng"}>
-      <div className="row dashboard">
-        <div className="col-md-3">
-          <AdminMenu />
+      <div className="container-fluid m-3 p-3">
+        <div className="row">
+          <div className="col-md-3">
+            <AdminMenu />
+          </div>
+          <div className="col-md-9">
+            <Typography variant="h4">Tất cả đơn hàng</Typography>
+            <DataGrid
+              rows={orders}
+              columns={columns}
+              getRowId={getRowId}
+              initialState={{
+                pagination: {
+                  paginationModel: { page: 0, pageSize: 5 },
+                },
+              }}
+              pageSizeOptions={[5, 10]}
+            />
+          </div>
         </div>
-        <div className="col-md-9">
-          <h1 className="text-center">Tất cả đơn hàng</h1>
-          {orders?.map((o, i) => {
-            return (
-              <div className="border shadow">
-                <table className="table">
-                  <thead>
-                    <tr>
-                      <th scope="col">#</th>
-                      <th scope="col">Trạng thái</th>
-                      <th scope="col">Khách hàng</th>
-                      <th scope="col">Ngày đặt</th>
-                      <th scope="col">Thanh toán</th>
-                      <th scope="col">Số lượng</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr>
-                      <td>{i + 1}</td>
-                      <td>
-                        <Select
-                          bordered={false}
-                          onChange={(value) => handleChange(o._id, value)}
-                          defaultValue={o?.status}
-                        >
-                          {status.map((s, i) => (
-                            <Option key={i} value={s}>
-                              {s}
-                            </Option>
-                          ))}
-                        </Select>
-                      </td>
-                      <td>{o?.buyer?.name}</td>
-                      <td>
-                        {moment(o?.createAt).format("L")}{" "}
-                        {moment(o?.createAt).format("LT")}
-                      </td>
-                      <td>{o?.payment.success ? "Thành công" : "Thất bại"}</td>
-                      <td>{o?.products?.length}</td>
-                    </tr>
-                  </tbody>
-                </table>
-                <div className="container">
-                  {o?.products?.map((p, i) => (
-                    <div className="row mb-2 p-3 card flex-row" key={p._id}>
-                      <div className="col-md-4">
-                        <img
-                          src={`${process.env.REACT_APP_API}/api/v1/product/product-photo/${p._id}`}
-                          className="card-img-top"
-                          alt={p.name}
-                          style={{
-                            width: "100px",
-                            height: "100px",
-                            objectFit: "cover",
-                          }}
-                        />
-                      </div>
-                      <div className="col-md-8">
-                        <p>{p.name}</p>
-                        <p>{p.description.substring(0, 30)}</p>
-                        <p>Price : {p.price}</p>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            );
-          })}
-        </div>
+        <Modal
+          onCancel={() => setVisible(false)}
+          footer={null}
+          visible={visible}
+        >
+          <OrderDetails products={orderProduct} />
+        </Modal>
       </div>
     </Layout>
   );

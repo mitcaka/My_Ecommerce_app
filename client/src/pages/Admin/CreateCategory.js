@@ -22,14 +22,14 @@ const CreateCategory = () => {
         }
       );
       if (data?.success) {
-        toast.success(`${name} is created`);
+        toast.success(`${name} tạo thành công`);
         getAllCategory();
       } else {
         toast.error(data.message);
       }
     } catch (error) {
       console.log(error);
-      toast.error("somthing went wrong in input form");
+      toast.error("Lỗi khi nhập liệu");
     }
   };
 
@@ -44,7 +44,7 @@ const CreateCategory = () => {
       }
     } catch (error) {
       console.log(error);
-      toast.error("Something wwent wrong in getting catgeory");
+      toast.error("Lỗi ở đâu đó");
     }
   };
 
@@ -61,7 +61,7 @@ const CreateCategory = () => {
         { name: updatedName }
       );
       if (data.success) {
-        toast.success(`${updatedName} is updated`);
+        toast.success(`${updatedName} đã cập nhật`);
         setSelected(null);
         setUpdatedName("");
         setVisible(false);
@@ -80,25 +80,25 @@ const CreateCategory = () => {
         `${process.env.REACT_APP_API}/api/v1/category/delete-category/${pId}`
       );
       if (data.success) {
-        toast.success(`category is deleted`);
+        toast.success(`Xóa danh mục thành công`);
 
         getAllCategory();
       } else {
         toast.error(data.message);
       }
     } catch (error) {
-      toast.error("Somtihing went wrong");
+      toast.error("Lỗi ở đâu đó rồi");
     }
   };
   return (
-    <Layout title={"Dashboard - Create Category"}>
+    <Layout title={"Quản lý - Danh mục"}>
       <div className="container-fluid m-3 p-3">
         <div className="row">
           <div className="col-md-3">
             <AdminMenu />
           </div>
           <div className="col-md-9">
-            <h1>Manage Category</h1>
+            <h1>Quản lý danh mục</h1>
             <div className="p-3 w-50">
               <CategoryForm
                 handleSubmit={handleSubmit}
@@ -110,7 +110,7 @@ const CreateCategory = () => {
               <table className="table">
                 <thead>
                   <tr>
-                    <th scope="col">Name</th>
+                    <th scope="col">Tên</th>
                     <th scope="col">Actions</th>
                   </tr>
                 </thead>
@@ -128,7 +128,7 @@ const CreateCategory = () => {
                               setSelected(c);
                             }}
                           >
-                            Edit
+                            Sửa
                           </button>
                           <button
                             className="btn btn-danger ms-2"
@@ -136,7 +136,7 @@ const CreateCategory = () => {
                               handleDelete(c._id);
                             }}
                           >
-                            Delete
+                            Xóa
                           </button>
                         </td>
                       </tr>
