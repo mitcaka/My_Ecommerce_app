@@ -45,7 +45,7 @@ const Login = () => {
     <Layout title="Register - Ecommer App">
       <div className="form-container ">
         <form onSubmit={handleSubmit}>
-          <h4 className="title">LOGIN FORM</h4>
+          <h4 className="title">Đăng nhập</h4>
 
           <div className="mb-3">
             <input
@@ -54,7 +54,7 @@ const Login = () => {
               onChange={(e) => setEmail(e.target.value)}
               className="form-control"
               id="exampleInputEmail1"
-              placeholder="Enter Your Email "
+              placeholder="Nhập email "
               required
             />
           </div>
@@ -65,7 +65,7 @@ const Login = () => {
               onChange={(e) => setPassword(e.target.value)}
               className="form-control"
               id="exampleInputPassword1"
-              placeholder="Enter Your Password"
+              placeholder="Nhập mật khẩu"
               required
             />
           </div>
@@ -77,12 +77,12 @@ const Login = () => {
                 navigate("/forgot-password");
               }}
             >
-              Forgot Password
+              Quên mật khẩu
             </button>
           </div>
 
           <button type="submit" className="btn btn-primary">
-            LOGIN
+            Đăng nhập
           </button>
         </form>
       </div>

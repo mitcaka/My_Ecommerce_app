@@ -115,47 +115,50 @@ const HomePage = () => {
   };
   return (
     <Layout title={"All product - Best deal "}>
-      <div className="container-fluid row mt-3">
-        <div className="col-md-2">
-          <h4 className="text-center">Filter By Category</h4>
-          <div className="d-flex flex-column">
-            {categories?.map((c) => (
-              <Checkbox
-                key={c._id}
-                onChange={(e) => handleFilter(e.target.checked, c._id)}
-              >
-                {c.name}
-              </Checkbox>
-            ))}
-          </div>
-          {/* price filter */}
-          <h4 className="text-center">Filter By Price</h4>
-          <div className="d-flex flex-column">
-            <Radio.Group onChange={(e) => setRadio(e.target.value)}>
-              {Prices?.map((p) => (
-                <div key={p._id}>
-                  <Radio value={p.array}>{p.name}</Radio>
-                </div>
+      <div className="container-fluid row mt-3 justify-content-center">
+        <div className="col-md-3">
+          <div style={{ border: "1px solid gray", padding: "10px" }}>
+            <h4 className="text-center">Tìm theo danh mục</h4>
+            <div className="d-flex flex-column p-2">
+              {categories?.map((c) => (
+                <Checkbox
+                  key={c._id}
+                  onChange={(e) => handleFilter(e.target.checked, c._id)}
+                >
+                  {c.name}
+                </Checkbox>
               ))}
-            </Radio.Group>
-          </div>
-          <div className="d-flex flex-column">
-            <button
-              className="btn btn-danger"
-              onClick={() => window.location.reload()}
-            >
-              RESET FILTERS
-            </button>
+            </div>
+            {/* price filter */}
+            <h4 className="text-center">Tìm theo giá tiền</h4>
+            <div className="d-flex flex-column p-2">
+              <Radio.Group onChange={(e) => setRadio(e.target.value)}>
+                {Prices?.map((p) => (
+                  <div key={p._id}>
+                    <Radio value={p.array}>{p.name}</Radio>
+                  </div>
+                ))}
+              </Radio.Group>
+            </div>
+            <div className="d-flex flex-column p-2">
+              <button
+                className="btn btn-danger"
+                onClick={() => window.location.reload()}
+              >
+                Thiết lập lại
+              </button>
+            </div>
           </div>
         </div>
         <div className="col-md-9">
-          <h1 className="text-center">All Products</h1>
-          <div className="d-flex flex-wrap">
+          <h1 className="text-center">Tất cả sản phẩm</h1>
+          <div className="d-flex flex-wrap justify-content-center">
             {products?.map((p) => (
-              <div className="card m-2" style={{ width: "18rem" }}>
+              <div className="card m-2" style={{ width: "20rem" }}>
                 <img
                   src={`${process.env.REACT_APP_API}/api/v1/product/product-photo/${p._id}`}
                   className="card-img-top"
+                  style={{ width: "100%", height: "100%", objectFit: "cover" }}
                   alt={p.name}
                 />
                 <div className="card-body">
@@ -163,12 +166,12 @@ const HomePage = () => {
                   <p className="card-text">
                     {p.description.substring(0, 30)}...
                   </p>
-                  <p className="card-text">${p.price}</p>
+                  <p className="card-text">{p.price} VNĐ</p>
                   <button
                     onClick={() => navigate(`/product/${p.slug}`)}
                     className="btn btn-primary ms-1"
                   >
-                    More Details
+                    Chi tiết
                   </button>
                   <button
                     onClick={() => {
@@ -181,7 +184,7 @@ const HomePage = () => {
                     }}
                     className="btn btn-secondary ms-1"
                   >
-                    ADD TO CARD
+                    Thêm vào giỏ
                   </button>
                 </div>
               </div>
@@ -196,7 +199,7 @@ const HomePage = () => {
                   setPage(page + 1);
                 }}
               >
-                {loading ? "Loading ..." : "Loadmore"}
+                {loading ? "Loading ..." : "Xem thêm"}
               </button>
             )}
           </div>

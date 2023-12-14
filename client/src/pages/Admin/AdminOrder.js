@@ -10,11 +10,11 @@ const { Option } = Select;
 
 const AdminOrders = () => {
   const [status, setStatus] = useState([
-    "Not Process",
-    "Processing",
-    "Shipped",
-    "deliverd",
-    "cancel",
+    "Chưa xử lý",
+    "Đang xử lý",
+    "Đã vận chuyển",
+    "Giao hàng",
+    "Hủy bỏ",
   ]);
   const [changeStatus, setCHangeStatus] = useState("");
   const [orders, setOrders] = useState([]);
@@ -36,22 +36,25 @@ const AdminOrders = () => {
 
   const handleChange = async (orderId, value) => {
     try {
-      const { data } = await axios.put(`/api/v1/auth/order-status/${orderId}`, {
-        status: value,
-      });
+      const { data } = await axios.put(
+        `${process.env.REACT_APP_API}/api/v1/auth/order-status/${orderId}`,
+        {
+          status: value,
+        }
+      );
       getOrders();
     } catch (error) {
       console.log(error);
     }
   };
   return (
-    <Layout title={"All Orders Data"}>
+    <Layout title={"Đơn hàng"}>
       <div className="row dashboard">
         <div className="col-md-3">
           <AdminMenu />
         </div>
         <div className="col-md-9">
-          <h1 className="text-center">All Orders</h1>
+          <h1 className="text-center">Tất cả đơn hàng</h1>
           {orders?.map((o, i) => {
             return (
               <div className="border shadow">
@@ -59,11 +62,11 @@ const AdminOrders = () => {
                   <thead>
                     <tr>
                       <th scope="col">#</th>
-                      <th scope="col">Status</th>
-                      <th scope="col">Buyer</th>
-                      <th scope="col"> date</th>
-                      <th scope="col">Payment</th>
-                      <th scope="col">Quantity</th>
+                      <th scope="col">Trạng thái</th>
+                      <th scope="col">Khách hàng</th>
+                      <th scope="col">Ngày đặt</th>
+                      <th scope="col">Thanh toán</th>
+                      <th scope="col">Số lượng</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -83,8 +86,11 @@ const AdminOrders = () => {
                         </Select>
                       </td>
                       <td>{o?.buyer?.name}</td>
-                      <td>{moment(o?.createAt).fromNow()}</td>
-                      <td>{o?.payment.success ? "Success" : "Failed"}</td>
+                      <td>
+                        {moment(o?.createAt).format("L")}{" "}
+                        {moment(o?.createAt).format("LT")}
+                      </td>
+                      <td>{o?.payment.success ? "Thành công" : "Thất bại"}</td>
                       <td>{o?.products?.length}</td>
                     </tr>
                   </tbody>
@@ -97,8 +103,11 @@ const AdminOrders = () => {
                           src={`${process.env.REACT_APP_API}/api/v1/product/product-photo/${p._id}`}
                           className="card-img-top"
                           alt={p.name}
-                          width="100px"
-                          height={"100px"}
+                          style={{
+                            width: "100px",
+                            height: "100px",
+                            objectFit: "cover",
+                          }}
                         />
                       </div>
                       <div className="col-md-8">

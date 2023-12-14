@@ -17,7 +17,7 @@ var gateway = new braintree.BraintreeGateway({
 });
 
 //create product
-export const createProductController = async (req, res) => {
+export const createProduct = async (req, res) => {
   try {
     const { name, slug, description, price, category, quantity, shipping } =
       req.fields;
@@ -62,7 +62,7 @@ export const createProductController = async (req, res) => {
 };
 
 //get product
-export const getProductController = async (req, res) => {
+export const getProduct = async (req, res) => {
   try {
     const products = await productModel
       .find({})
@@ -87,7 +87,7 @@ export const getProductController = async (req, res) => {
 };
 
 //get single product
-export const getSingleProductController = async (req, res) => {
+export const getSingleProduct = async (req, res) => {
   try {
     const product = await productModel
       .findOne({ slug: req.params.slug })
@@ -109,7 +109,7 @@ export const getSingleProductController = async (req, res) => {
 };
 
 //get photos
-export const productPhotoController = async (req, res) => {
+export const productPhoto = async (req, res) => {
   try {
     const product = await productModel.findById(req.params.pid).select("photo");
     if (product.photo.data) {
@@ -127,7 +127,7 @@ export const productPhotoController = async (req, res) => {
 };
 
 //delete product
-export const deleteProductController = async (req, res) => {
+export const deleteProduct = async (req, res) => {
   try {
     await productModel.findByIdAndDelete(req.params.pid).select("-photo");
     res.status(200).send({
@@ -145,7 +145,7 @@ export const deleteProductController = async (req, res) => {
 };
 
 //update product
-export const updateProductController = async (req, res) => {
+export const updateProduct = async (req, res) => {
   try {
     const { name, slug, description, price, category, quantity, shipping } =
       req.fields;
@@ -198,7 +198,7 @@ export const updateProductController = async (req, res) => {
 };
 
 //filter product
-export const productFiltersController = async (req, res) => {
+export const productFilters = async (req, res) => {
   try {
     const { checked, radio } = req.body;
     let args = {};
@@ -220,7 +220,7 @@ export const productFiltersController = async (req, res) => {
 };
 
 // product count
-export const productCountController = async (req, res) => {
+export const productCount = async (req, res) => {
   try {
     const total = await productModel.find({}).estimatedDocumentCount();
     res.status(200).send({
@@ -238,7 +238,7 @@ export const productCountController = async (req, res) => {
 };
 
 // product list base on page
-export const productListController = async (req, res) => {
+export const productList = async (req, res) => {
   try {
     const perPage = 6;
     const page = req.params.page ? req.params.page : 1;
@@ -263,7 +263,7 @@ export const productListController = async (req, res) => {
 };
 
 //search product
-export const searchProductController = async (req, res) => {
+export const searchProduct = async (req, res) => {
   try {
     const { keyword } = req.params;
     const resutls = await productModel
@@ -286,7 +286,7 @@ export const searchProductController = async (req, res) => {
 };
 
 // similar products
-export const realtedProductController = async (req, res) => {
+export const realtedProduct = async (req, res) => {
   try {
     const { pid, cid } = req.params;
     const products = await productModel
@@ -312,7 +312,7 @@ export const realtedProductController = async (req, res) => {
 };
 
 // get product by category
-export const productCategoryController = async (req, res) => {
+export const productCategory = async (req, res) => {
   try {
     const category = await categoryModel.findOne({ slug: req.params.slug });
     const products = await productModel.find({ category }).populate("category");
@@ -333,7 +333,7 @@ export const productCategoryController = async (req, res) => {
 
 //payment gateway api
 //token
-export const braintreeTokenController = async (req, res) => {
+export const braintreeToken = async (req, res) => {
   try {
     gateway.clientToken.generate({}, function (err, response) {
       if (err) {
@@ -348,7 +348,7 @@ export const braintreeTokenController = async (req, res) => {
 };
 
 //payment
-export const braintreePaymentController = async (req, res) => {
+export const braintreePayment = async (req, res) => {
   try {
     const { nonce, cart } = req.body;
     let total = 0;

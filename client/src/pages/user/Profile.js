@@ -62,7 +62,7 @@ const Profile = () => {
           <div className="col-md-9">
             <div className="form-container ">
               <form onSubmit={handleSubmit}>
-                <h4 className="title">USER PROFILE</h4>
+                <h4 className="title">Thông tin cá nhân</h4>
                 <div className="mb-3">
                   <input
                     type="text"
@@ -70,7 +70,7 @@ const Profile = () => {
                     onChange={(e) => setName(e.target.value)}
                     className="form-control"
                     id="exampleInputEmail1"
-                    placeholder="Enter Your Name"
+                    placeholder="Nhập tên"
                     autoFocus
                   />
                 </div>
@@ -81,7 +81,7 @@ const Profile = () => {
                     onChange={(e) => setEmail(e.target.value)}
                     className="form-control"
                     id="exampleInputEmail1"
-                    placeholder="Enter Your Email "
+                    placeholder="Nhập Email "
                     disabled
                   />
                 </div>
@@ -92,7 +92,7 @@ const Profile = () => {
                     onChange={(e) => setPassword(e.target.value)}
                     className="form-control"
                     id="exampleInputPassword1"
-                    placeholder="Enter Your Password"
+                    placeholder="Nhập mật khẩu mới"
                   />
                 </div>
                 <div className="mb-3">
@@ -102,7 +102,7 @@ const Profile = () => {
                     onChange={(e) => setPhone(e.target.value)}
                     className="form-control"
                     id="exampleInputEmail1"
-                    placeholder="Enter Your Phone"
+                    placeholder="Nhập số điện thoại"
                   />
                 </div>
                 <div className="mb-3">
@@ -112,12 +112,12 @@ const Profile = () => {
                     onChange={(e) => setAddress(e.target.value)}
                     className="form-control"
                     id="exampleInputEmail1"
-                    placeholder="Enter Your Address"
+                    placeholder="Nhập địa chỉ "
                   />
                 </div>
 
                 <button type="submit" className="btn btn-primary">
-                  UPDATE
+                  Cập nhật
                 </button>
               </form>
             </div>

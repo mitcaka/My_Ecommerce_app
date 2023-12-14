@@ -5,18 +5,18 @@ const UserMenu = () => {
     <div>
       <div className="text-center">
         <div className="list-group">
-          <h4>Dashboard</h4>
+          <h4>Trang cá nhân</h4>
           <NavLink
             to="/dashboard/user/profile"
             className="list-group-item list-group-item-action"
           >
-            Profile
+            Thông tin
           </NavLink>
           <NavLink
             to="/dashboard/user/orders"
             className="list-group-item list-group-item-action"
           >
-            Orders
+            Đơn hàng
           </NavLink>
         </div>
       </div>

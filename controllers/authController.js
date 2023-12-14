@@ -3,7 +3,7 @@ import orderModel from "../models/orderModel.js";
 import { comparePassword, hashPassword } from "./../helpers/authHelper.js";
 import JWT from "jsonwebtoken";
 
-export const registerController = async (req, res) => {
+export const register = async (req, res) => {
   try {
     const { name, email, password, phone, address, answer } = req.body;
     //validations
@@ -63,7 +63,7 @@ export const registerController = async (req, res) => {
 };
 
 //POST LOGIN
-export const loginController = async (req, res) => {
+export const login = async (req, res) => {
   try {
     const { email, password } = req.body;
     //validation
@@ -116,7 +116,7 @@ export const loginController = async (req, res) => {
   }
 };
 
-export const forgotPasswordController = async (req, res) => {
+export const forgotPassword = async (req, res) => {
   try {
     const { email, answer, newPassword } = req.body;
     if (!email) {
@@ -158,12 +158,12 @@ export const forgotPasswordController = async (req, res) => {
   }
 };
 
-export const testController = async (req, res) => {
+export const test = async (req, res) => {
   res.send("protected routes");
 };
 
 //update profile
-export const updateProfileController = async (req, res) => {
+export const updateProfile = async (req, res) => {
   try {
     const { name, email, password, address, phone } = req.body;
     const user = await userModel.findById(req.user._id);
@@ -197,7 +197,7 @@ export const updateProfileController = async (req, res) => {
   }
 };
 
-export const getOrdersController = async (req, res) => {
+export const getOrders = async (req, res) => {
   try {
     const orders = await orderModel
       .find({ buyer: req.user._id })
@@ -215,7 +215,7 @@ export const getOrdersController = async (req, res) => {
 };
 
 //orders
-export const getAllOrdersController = async (req, res) => {
+export const getAllOrders = async (req, res) => {
   try {
     const orders = await orderModel
       .find({})

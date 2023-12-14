@@ -1,12 +1,12 @@
 import express from "express";
 import {
-  registerController,
-  loginController,
-  testController,
-  forgotPasswordController,
-  updateProfileController,
-  getOrdersController,
-  getAllOrdersController,
+  register,
+  login,
+  test,
+  forgotPassword,
+  updateProfile,
+  getOrders,
+  getAllOrders,
   orderStatusController,
 } from "../controllers/authController.js";
 import { requireSignIn, isAdmin } from "../middlewares/authMiddleware.js";
@@ -16,16 +16,16 @@ const router = express.Router();
 
 //routing
 //RESGISTER || METHOD POST
-router.post("/register", registerController);
+router.post("/register", register);
 
 //LOGIN || POST
-router.post("/login", loginController);
+router.post("/login", login);
 
 //Forgot password || POST
-router.post("/forgot-password", forgotPasswordController);
+router.post("/forgot-password", forgotPassword);
 
 //test routes
-router.get("/test", requireSignIn, isAdmin, testController);
+router.get("/test", requireSignIn, isAdmin, test);
 
 //protected User route auth
 router.get("/user-auth", requireSignIn, (req, res) => {
@@ -38,13 +38,13 @@ router.get("/admin-auth", requireSignIn, isAdmin, (req, res) => {
 });
 
 //update profile
-router.put("/profile", requireSignIn, updateProfileController);
+router.put("/profile", requireSignIn, updateProfile);
 
 //orders
-router.get("/orders", requireSignIn, getOrdersController);
+router.get("/orders", requireSignIn, getOrders);
 
 //all orders
-router.get("/all-orders", requireSignIn, isAdmin, getAllOrdersController);
+router.get("/all-orders", requireSignIn, isAdmin, getAllOrders);
 
 // order status update
 router.put(
@@ -53,4 +53,5 @@ router.put(
   isAdmin,
   orderStatusController
 );
+
 export default router;

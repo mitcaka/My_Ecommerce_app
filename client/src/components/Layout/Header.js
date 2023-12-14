@@ -37,13 +37,13 @@ const Header = () => {
           </button>
           <div className="collapse navbar-collapse" id="navbarTogglerDemo01">
             <Link to="/" className="navbar-brand">
-              🛒 Camera Store
+              📷 Camera Store
             </Link>
             <ul className="navbar-nav ms-auto mb-2 mb-lg-0">
               <SearchInput />
               <li className="nav-item">
                 <NavLink to="/" className="nav-link ">
-                  Home
+                  Trang chủ
                 </NavLink>
               </li>
               <li className="nav-item dropdown">
@@ -52,12 +52,12 @@ const Header = () => {
                   to={"/categories"}
                   data-bs-toggle="dropdown"
                 >
-                  Categories
+                  Danh mục
                 </Link>
                 <ul className="dropdown-menu">
                   <li>
                     <Link className="dropdown-item" to={"/categories"}>
-                      All Categories
+                      Tất cả danh mục
                     </Link>
                   </li>
                   {categories?.map((c) => (
@@ -76,12 +76,12 @@ const Header = () => {
                 <>
                   <li className="nav-item">
                     <NavLink to="/register" className="nav-link">
-                      Register
+                      Đăng ký
                     </NavLink>
                   </li>
                   <li className="nav-item">
                     <NavLink to="/login" className="nav-link">
-                      Login
+                      Đăng nhập
                     </NavLink>
                   </li>
                 </>
@@ -105,7 +105,7 @@ const Header = () => {
                           }`}
                           className="dropdown-item"
                         >
-                          Dashboard
+                          Trang cá nhân
                         </NavLink>
                       </li>
                       <li>
@@ -114,14 +114,14 @@ const Header = () => {
                           to="/login"
                           className="dropdown-item"
                         >
-                          Logout
+                          Đăng xuất
                         </NavLink>
                       </li>
                     </ul>
                   </li>
                 </>
               )}
-              <li className="nav-item">
+              <li className="nav-item p-2">
                 <Badge count={cart?.length} showZero>
                   <NavLink to="/cart" className="nav-link">
                     🛒
