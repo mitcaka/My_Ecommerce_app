@@ -15,30 +15,17 @@ import Typography from "@mui/material/Typography";
 
 const CartPage = () => {
   const [auth, setAuth] = useAuth();
-  // const [cart, setCart] = useCart();
   const { cart, addToCart, removeFromCart } = useContext(CartContext);
   const navigate = useNavigate();
   const [clientToken, setClientToken] = useState("");
   const [instance, setInstance] = useState("");
   const [loading, setLoading] = useState(false);
-  //delete item
-  // const removeCartItem = (pid) => {
-  //   try {
-  //     let myCart = [...cart];
-  //     let index = myCart.findIndex((item) => item._id === pid);
-  //     myCart.splice(index, 1);
-  //     setCart(myCart);
-  //     localStorage.setItem("cart", JSON.stringify(myCart));
-  //   } catch (error) {
-  //     console.log(error);
-  //   }
-  // };
   //total price
   const totalPrice = () => {
     try {
       let total = 0;
       cart?.map((item) => {
-        total = total + item.product.price * item.quantity;
+        total = total + item.products.price * item.quantity;
       });
       return formatCurrency(total);
     } catch (error) {
@@ -73,9 +60,28 @@ const CartPage = () => {
       );
       setLoading(false);
       localStorage.removeItem("cart");
-      // setCart([]);
       navigate("/dashboard/user/orders");
-      toast.success("Payment Completed Successfully ");
+      toast.success("Thanh toán thành công");
+    } catch (error) {
+      console.log(error);
+      toast.error("Đặt hàng thất bại");
+      setLoading(false);
+    }
+  };
+
+  const handleOrder = async () => {
+    try {
+      setLoading(true);
+      const { data } = await axios.post(
+        `${process.env.REACT_APP_API}/api/v1/product/payment`,
+        {
+          cart,
+        }
+      );
+      setLoading(false);
+      localStorage.removeItem("cart");
+      navigate("/dashboard/user/orders");
+      toast.success("Đặt hàng thành công");
     } catch (error) {
       console.log(error);
       setLoading(false);
@@ -154,12 +160,13 @@ const CartPage = () => {
                 <div className="mb-3">
                   <h4>Địa chỉ nhận hàng : </h4>
                   <h5>{auth?.user?.address}</h5>
-                  <button
-                    className="btn btn-outline-warning"
+                  <Button
+                    variant="outlined"
                     onClick={() => navigate("/dashboard/user/profile")}
+                    color="success"
                   >
-                    Update Address
-                  </button>
+                    Cập nhật địa chỉ
+                  </Button>
                 </div>
               </>
             ) : (
@@ -200,13 +207,28 @@ const CartPage = () => {
                     }}
                     onInstance={(instance) => setInstance(instance)}
                   />
-                  <button
-                    className="btn btn-primary"
+
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    className="m-2"
                     onClick={handlePayment}
                     disabled={loading || !instance || !auth?.user?.address}
                   >
                     {loading ? "Đang tiến hành ...." : "Thanh toán thẻ"}
-                  </button>
+                  </Button>
+
+                  <Button
+                    variant="contained"
+                    color="success"
+                    className="m-2"
+                    onClick={handleOrder}
+                    disabled={loading || !instance || !auth?.user?.address}
+                  >
+                    {loading
+                      ? "Đang tiến hành ...."
+                      : "Thanh toán khi nhận hàng"}
+                  </Button>
                 </>
               )}
             </div>

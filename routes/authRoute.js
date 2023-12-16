@@ -12,6 +12,7 @@ import {
   getBudget,
   countSuccsessOrder,
   totalMoney,
+  calculate12Months,
 } from "../controllers/authController.js";
 import { requireSignIn, isAdmin } from "../middlewares/authMiddleware.js";
 
@@ -68,5 +69,7 @@ router.get("/budget", requireSignIn, isAdmin, getBudget);
 router.get("/susscess-order", requireSignIn, isAdmin, countSuccsessOrder);
 
 router.get("/total-money", requireSignIn, isAdmin, totalMoney);
+
+router.get("/total-12month", requireSignIn, isAdmin, calculate12Months);
 
 export default router;

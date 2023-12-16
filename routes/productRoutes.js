@@ -15,6 +15,7 @@ import {
   productCategory,
   braintreeToken,
   braintreePayment,
+  orderPayment,
 } from "./../controllers/productController.js";
 import formidable from "express-formidable";
 
@@ -74,4 +75,6 @@ router.get("/braintree/token", braintreeToken);
 
 //payments
 router.post("/braintree/payment", requireSignIn, braintreePayment);
+
+router.post("/payment", requireSignIn, orderPayment);
 export default router;

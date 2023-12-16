@@ -1,13 +1,23 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import Layout from "./../components/Layout/Layout";
 import axios from "axios";
 import { useParams, useNavigate } from "react-router-dom";
+import Typography from "@mui/material/Typography";
+import { CartContext } from "../context/cart";
+import toast from "react-hot-toast";
 
 const ProductDetails = () => {
   const params = useParams();
   const [product, setProduct] = useState([]);
   const [relatedProducts, setRelatedProducts] = useState([]);
   const navigate = useNavigate();
+  const { cart, addToCart } = useContext(CartContext);
+  function formatCurrency(amount) {
+    return amount.toLocaleString("vi-VN", {
+      style: "currency",
+      currency: "VND",
+    });
+  }
   //init product details
   useEffect(() => {
     if (params?.slug) getProduct();
@@ -42,7 +52,7 @@ const ProductDetails = () => {
   };
   return (
     <Layout>
-      <div className="row container">
+      <div className="row container justify-content-center mt-5">
         <div className="col-md-4">
           <img
             src={`${process.env.REACT_APP_API}/api/v1/product/product-photo/${product._id}`}
@@ -53,19 +63,32 @@ const ProductDetails = () => {
           />
         </div>
         <div className="col-md-6 ">
-          <h1 className="text-center">Product Details</h1>
-          <h6>Name : {product.name}</h6>
-          <h6>Description : {product.description}</h6>
-          <h6>Price : {product.price}</h6>
-          <h6>Category : {product?.category?.name}</h6>
-          <button class="btn btn-secondary ms-1">ADD TO CART</button>
+          <Typography variant="h4" className="p-2">
+            {product.name}
+          </Typography>
+          <Typography variant="body1" className="p-2">
+            {product.description}
+          </Typography>
+          <Typography variant="h5" className="p-2">
+            Giá tiền : <strong>{product.price}</strong>
+          </Typography>
+          <h6 className="p-2">Danh mục : {product?.category?.name}</h6>
+          <button
+            onClick={() => {
+              addToCart(product);
+              toast.success("Thêm vào giỏ hàng thành công");
+            }}
+            className="btn btn-danger ms-1 p-2"
+          >
+            Thêm vào giỏ
+          </button>
         </div>
       </div>
       <hr />
       <div className="row container">
-        <h6>Similar Products</h6>
+        <h6>Sản phẩm tương tự</h6>
         {relatedProducts.length < 1 && (
-          <p className="text-center">No Similar Products found</p>
+          <p className="text-center">Không tìm thấy sản phẩm tương tự</p>
         )}
         <div className="d-flex flex-wrap">
           {relatedProducts?.map((p) => (
@@ -78,7 +101,7 @@ const ProductDetails = () => {
               <div className="card-body">
                 <h5 className="card-title">{p.name}</h5>
                 <p className="card-text">{p.description.substring(0, 30)}...</p>
-                <p className="card-text"> $ {p.price}</p>
+                <p className="card-text">$ {p.price}</p>
                 <button
                   className="btn btn-primary ms-1"
                   onClick={() => navigate(`/product/${p.slug}`)}

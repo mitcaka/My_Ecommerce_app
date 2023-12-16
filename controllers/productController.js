@@ -387,3 +387,56 @@ export const braintreePayment = async (req, res) => {
     console.log(error);
   }
 };
+
+export const orderPayment = async (req, res) => {
+  try {
+    const { cart } = req.body;
+
+    // Kiểm tra số lượng sản phẩm trước khi giảm
+    for (const item of cart) {
+      const product = await productModel.findById(item.products._id);
+      if (!product) {
+        return res.status(404).json({
+          success: false,
+          message: `Không tìm thấy sản phẩm có mã: ${item.products._id}`,
+        });
+      }
+      if (product.quantity < item.quantity) {
+        return res.status(400).json({
+          success: false,
+          message: `Mua quá số lượng tong cửa hàng`,
+        });
+      }
+    }
+
+    const order = await new orderModel({
+      orderItems: cart.map((item) => ({
+        quantity: item.quantity,
+        product: item.products._id,
+      })),
+      payment: {
+        success: false,
+      },
+      status: "Chưa xử lý",
+      buyer: req.user._id,
+    }).save();
+
+    // Giảm số lượng sản phẩm trong giỏ hàng
+    await Promise.all(
+      cart.map(async (item) => {
+        await productModel.findByIdAndUpdate(
+          item.products._id,
+          {
+            $inc: { quantity: -item.quantity },
+          },
+          { new: true }
+        );
+      })
+    );
+
+    res.json({ success: true, message: "Đặt hàng thành công" });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ success: false, message: "Internal server error." });
+  }
+};

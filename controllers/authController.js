@@ -2,6 +2,7 @@ import userModel from "../models/userModel.js";
 import orderModel from "../models/orderModel.js";
 import { comparePassword, hashPassword } from "./../helpers/authHelper.js";
 import JWT from "jsonwebtoken";
+import moment from "moment";
 
 export const register = async (req, res) => {
   try {
@@ -201,8 +202,8 @@ export const getOrders = async (req, res) => {
   try {
     const orders = await orderModel
       .find({ buyer: req.user._id })
-      .populate("products");
-    // .populate("buyer", "name");
+      .populate("orderItems.product", "-photo")
+      .sort({ createdAt: "-1" });
     res.json(orders);
   } catch (error) {
     console.log(error);
@@ -439,6 +440,81 @@ export const totalMoney = async (req, res) => {
     res.status(500).send({
       success: false,
       message: "Lỗi khi tính tổng số tiền từ các đơn hàng thành công",
+      error,
+    });
+  }
+};
+
+export const calculate12Months = async (req, res) => {
+  try {
+    const twelveMonthsAgo = moment().subtract(12, "months").startOf("month");
+    const currentMonth = moment().startOf("month");
+
+    const months = [];
+    let monthCursor = moment(twelveMonthsAgo);
+    while (monthCursor.isSameOrBefore(currentMonth)) {
+      months.push(monthCursor.format("YYYY-MM"));
+      monthCursor.add(1, "month");
+    }
+
+    const pipeline = [
+      {
+        $match: {
+          status: "Đã nhận hàng",
+          createdAt: { $gte: twelveMonthsAgo.toDate() },
+        },
+      },
+      {
+        $unwind: "$orderItems",
+      },
+      {
+        $lookup: {
+          from: "products",
+          localField: "orderItems.product",
+          foreignField: "_id",
+          as: "product",
+        },
+      },
+      {
+        $addFields: {
+          totalPrice: {
+            $multiply: [
+              "$orderItems.quantity",
+              { $arrayElemAt: ["$product.price", 0] },
+            ],
+          },
+        },
+      },
+      {
+        $group: {
+          _id: {
+            month: { $dateToString: { format: "%Y-%m", date: "$createdAt" } },
+          },
+          totalRevenue: { $sum: "$totalPrice" },
+        },
+      },
+      {
+        $sort: { _id: 1 },
+      },
+    ];
+
+    const result = await orderModel.aggregate(pipeline);
+
+    const revenueByMonth = months.reduce((acc, month) => {
+      const foundMonth = result.find((item) => item._id.month === month);
+      acc[month] = foundMonth ? foundMonth.totalRevenue : 0;
+      return acc;
+    }, {});
+    const dataArray = Object.entries(revenueByMonth).map(([key, value]) => ({
+      key,
+      value,
+    }));
+    res.json(dataArray);
+  } catch (error) {
+    console.error("Lỗi khi tính tổng doanh thu:", error);
+    res.status(500).send({
+      success: false,
+      message: "Lỗi khi tính tổng doanh thu",
       error,
     });
   }

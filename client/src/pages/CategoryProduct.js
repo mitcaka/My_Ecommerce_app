@@ -33,10 +33,10 @@ const CategoryProduct = () => {
     });
   }
   return (
-    <Layout title="Product Category">
+    <Layout title="Danh mục sản phẩm">
       <div className="container mt-3">
-        <h4 className="text-center">Category - {category?.name}</h4>
-        <h6 className="text-center">{products?.length} result found </h6>
+        <h4 className="text-center">Danh mục - {category?.name}</h4>
+        <h6 className="text-center">{products?.length} sản phẩm tìm thấy </h6>
         <div className="row">
           <div className="col-md-9 offset-1">
             <div className="d-flex flex-wrap">

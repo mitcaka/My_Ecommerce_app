@@ -123,7 +123,7 @@ const HomePage = () => {
     });
   }
   return (
-    <Layout title={"All product - Best deal "}>
+    <Layout title={"Trang sản phẩm"}>
       <div className="container-fluid row mt-3 justify-content-center">
         <div className="col-md-3">
           <div style={{ border: "1px solid gray", padding: "10px" }}>
