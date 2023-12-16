@@ -87,7 +87,7 @@ const AdminOrders = () => {
                       </td>
                       <td>{o?.buyer?.name}</td>
                       <td>
-                        {moment(o?.createAt).format("L")}{" "}
+                        {moment(o?.createAt).format("L")}
                         {moment(o?.createAt).format("LT")}
                       </td>
                       <td>{o?.payment.success ? "Thành công" : "Thất bại"}</td>

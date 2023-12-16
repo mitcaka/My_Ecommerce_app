@@ -219,7 +219,7 @@ export const getAllOrders = async (req, res) => {
   try {
     const orders = await orderModel
       .find({})
-      .populate("products", "-photo")
+      .populate("orderItems.product", "-photo")
       .populate("buyer", "name")
       .sort({ createdAt: "-1" });
     res.json(orders);
@@ -249,6 +249,196 @@ export const orderStatusController = async (req, res) => {
     res.status(500).send({
       success: false,
       message: "Error While Updateing Order",
+      error,
+    });
+  }
+};
+
+export const getAllUsers = async (req, res) => {
+  try {
+    const users = await userModel.find({ role: 0 });
+    res.json(users);
+  } catch (error) {
+    console.log(error);
+    res.status(500).send({
+      success: false,
+      message: "Error While Geting Orders",
+      error,
+    });
+  }
+};
+
+export const getBudget = async (req, res) => {
+  try {
+    console.log("Dang tinh toan");
+    const currentDate = new Date();
+    const currentMonthFirstDate = new Date(
+      currentDate.getFullYear(),
+      currentDate.getMonth(),
+      1
+    );
+    const currentMonthLastDate = new Date(
+      currentDate.getFullYear(),
+      currentDate.getMonth() + 1,
+      0
+    );
+
+    const previousMonthFirstDate = new Date(
+      currentDate.getFullYear(),
+      currentDate.getMonth() - 1,
+      1
+    );
+    const previousMonthLastDate = new Date(
+      currentDate.getFullYear(),
+      currentDate.getMonth(),
+      0
+    );
+
+    const currentMonthOrders = await orderModel
+      .find({
+        createdAt: {
+          $gte: currentMonthFirstDate,
+          $lte: currentMonthLastDate,
+        },
+      })
+      .populate("orderItems.product");
+    const currentMonthProfit = currentMonthOrders.reduce(
+      (totalProfit, order) => {
+        const orderProfit = order.orderItems.reduce((subtotalProfit, item) => {
+          const productProfit = item.product.price;
+          return subtotalProfit + productProfit;
+        }, 0);
+        return totalProfit + orderProfit;
+      },
+      0
+    );
+
+    const previousMonthOrders = await orderModel
+      .find({
+        createdAt: {
+          $gte: previousMonthFirstDate,
+          $lte: previousMonthLastDate,
+        },
+      })
+      .populate("orderItems.product");
+    const previousMonthProfit = previousMonthOrders.reduce(
+      (totalProfit, order) => {
+        const orderProfit = order.orderItems.reduce((subtotalProfit, item) => {
+          const productProfit = item.product.price;
+          return subtotalProfit + productProfit;
+        }, 0);
+        return totalProfit + orderProfit;
+      },
+      0
+    );
+
+    const profitDifferencePercentage =
+      ((currentMonthProfit - previousMonthProfit) / previousMonthProfit) * 100;
+    const budget = [
+      currentMonthProfit,
+      previousMonthProfit,
+      profitDifferencePercentage,
+    ];
+    res.json(budget);
+  } catch (error) {
+    console.log(error);
+    res.status(500).send({
+      success: false,
+      message: "Error While Geting Orders",
+      error,
+    });
+  }
+};
+
+export const countSuccsessOrder = async (req, res) => {
+  let percent = 0;
+  try {
+    const countSuccessfulOrders = async () => {
+      try {
+        const totalOrders = await orderModel.countDocuments();
+        const successfulOrders = await orderModel.countDocuments({
+          status: "Đã nhận hàng",
+        });
+
+        const successRate = (successfulOrders / totalOrders) * 100;
+        percent = successRate.toFixed(2);
+        console.log("So don hàng" + totalOrders);
+        console.log("So don hàng thành công" + successfulOrders);
+        console.log(`Tỷ lệ đơn hàng thành công ac: ${percent}%`);
+        res.json(percent);
+      } catch (error) {
+        console.error("Lỗi khi đếm số lượng đơn hàng thành công:", error);
+      }
+    };
+    countSuccessfulOrders();
+  } catch (error) {
+    console.log(error);
+    res.status(500).send({
+      success: false,
+      message: "Error While Geting Orders",
+      error,
+    });
+  }
+};
+
+export const totalMoney = async (req, res) => {
+  try {
+    const pipeline = [
+      {
+        $match: { status: "Đã nhận hàng" },
+      },
+      {
+        $unwind: "$orderItems",
+      },
+      {
+        $lookup: {
+          from: "products",
+          localField: "orderItems.product",
+          foreignField: "_id",
+          as: "productInfo",
+        },
+      },
+      {
+        $unwind: "$productInfo",
+      },
+      {
+        $group: {
+          _id: "$_id",
+          totalPrice: {
+            $sum: {
+              $multiply: ["$productInfo.price", "$orderItems.quantity"],
+            },
+          },
+        },
+      },
+      {
+        $group: {
+          _id: null,
+          totalRevenue: {
+            $sum: "$totalPrice",
+          },
+        },
+      },
+    ];
+
+    const result = await orderModel.aggregate(pipeline);
+
+    if (result.length > 0) {
+      const totalRevenue = result[0].totalRevenue;
+      console.log("Tổng tiền: " + totalRevenue);
+      res.json(totalRevenue);
+    } else {
+      console.log("Không có đơn hàng thành công.");
+      res.json(0);
+    }
+  } catch (error) {
+    console.error(
+      "Lỗi khi tính tổng số tiền từ các đơn hàng thành công:",
+      error
+    );
+    res.status(500).send({
+      success: false,
+      message: "Lỗi khi tính tổng số tiền từ các đơn hàng thành công",
       error,
     });
   }

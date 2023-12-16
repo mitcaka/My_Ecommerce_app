@@ -19,8 +19,8 @@ const AdminOrders = () => {
     "Chưa xử lý",
     "Đang xử lý",
     "Đã vận chuyển",
-    "Giao hàng",
-    "Hủy bỏ",
+    "Đã nhận hàng",
+    "Hủy hàng",
   ]);
   const [changeStatus, setCHangeStatus] = useState("");
   const [orders, setOrders] = useState([]);
@@ -34,7 +34,6 @@ const AdminOrders = () => {
         `${process.env.REACT_APP_API}/api/v1/auth/all-orders`
       );
       setOrders(data);
-      console.log(data);
     } catch (error) {
       console.log(error);
     }
@@ -63,7 +62,7 @@ const AdminOrders = () => {
     {
       field: "checkStatus",
       headerName: "Trạng thái",
-      width: 130,
+      width: 150,
       renderCell: (params) => (
         <Select
           bordered={false}
@@ -84,7 +83,26 @@ const AdminOrders = () => {
       width: 120,
       valueGetter: (params) => params.row.buyer.name,
     },
-    { field: "createdAt", headerName: "Ngày đặt", width: 180 },
+    {
+      field: "createAt",
+      headerName: "Ngày tạo",
+      width: 150,
+      valueGetter: (params) => {
+        const formattedDate = moment(params.row.createAt).format("L");
+        const formattedTime = moment(params.row.createAt).format("LT");
+        return `${formattedDate} ${formattedTime}`;
+      },
+    },
+    {
+      field: "updatedAt",
+      headerName: "Ngày cập nhật",
+      width: 150,
+      valueGetter: (params) => {
+        const formattedDate = moment(params.row.updatedAt).format("L");
+        const formattedTime = moment(params.row.updatedAt).format("LT");
+        return `${formattedDate} ${formattedTime}`;
+      },
+    },
     {
       field: "payment",
       headerName: "Thanh toán",
@@ -98,19 +116,19 @@ const AdminOrders = () => {
       headerName: "Tổng tiền",
       width: 130,
       valueGetter: (params) => {
-        return formatCurrency(calculateTotalPrice(params.row.products));
+        return formatCurrency(calculateTotalAmount(params.row.orderItems));
       },
     },
     {
       field: "openModal",
       headerName: "Action",
-      width: 150,
+      width: 100,
       renderCell: (params) => (
         <Button
           variant="outlined"
-          onClick={() => handleOpenModal(params.row.products)}
+          onClick={() => handleOpenModal(params.row.orderItems)}
         >
-          Xem sản phẩm
+          Chi tiết
         </Button>
       ),
     },
@@ -128,9 +146,15 @@ const AdminOrders = () => {
     });
   }
 
-  function calculateTotalPrice(arr) {
-    const totalPrice = arr.reduce((sum, product) => sum + product.price, 0);
-    return totalPrice;
+  function calculateTotalAmount(orderItems) {
+    let totalAmount = 0;
+    orderItems.forEach((item) => {
+      const { quantity, product } = item;
+      const { price } = product;
+      const itemTotal = quantity * price;
+      totalAmount += itemTotal;
+    });
+    return totalAmount;
   }
 
   return (
@@ -160,7 +184,7 @@ const AdminOrders = () => {
           footer={null}
           visible={visible}
         >
-          <OrderDetails products={orderProduct} />
+          <OrderDetails orderItems={orderProduct} />
         </Modal>
       </div>
     </Layout>

@@ -353,11 +353,15 @@ export const braintreePayment = async (req, res) => {
     const { nonce, cart } = req.body;
     let total = 0;
     cart.map((i) => {
-      total += i.price;
+      total += i.products.price * i.quantity;
     });
+
+    const exchangeRate = 0.000041;
+    const usd = Math.round(total * exchangeRate * 100) / 100;
+    console.log(usd);
     let newTransaction = gateway.transaction.sale(
       {
-        amount: total,
+        amount: usd,
         paymentMethodNonce: nonce,
         options: {
           submitForSettlement: true,
@@ -366,7 +370,10 @@ export const braintreePayment = async (req, res) => {
       function (error, result) {
         if (result) {
           const order = new orderModel({
-            products: cart,
+            orderItems: cart.map((item) => ({
+              quantity: item.quantity,
+              product: item.products._id,
+            })),
             payment: result,
             buyer: req.user._id,
           }).save();

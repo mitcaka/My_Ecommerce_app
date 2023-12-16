@@ -2,10 +2,17 @@ import mongoose from "mongoose";
 
 const orderSchema = new mongoose.Schema(
   {
-    products: [
+    orderItems: [
       {
-        type: mongoose.ObjectId,
-        ref: "Products",
+        quantity: {
+          type: Number,
+          required: true,
+        },
+        product: {
+          type: mongoose.Schema.Types.ObjectId,
+          required: true,
+          ref: "Products",
+        },
       },
     ],
     payment: {},
@@ -15,8 +22,14 @@ const orderSchema = new mongoose.Schema(
     },
     status: {
       type: String,
-      default: "Not Process",
-      enum: ["Not Process", "Processing", "Shipped", "deliverd", "cancel"],
+      default: "Chưa xử lý",
+      enum: [
+        "Chưa xử lý",
+        "Đang xử lý",
+        "Đã vận chuyển",
+        "Đã nhận hàng",
+        "Hủy hàng",
+      ],
     },
   },
   { timestamps: true }

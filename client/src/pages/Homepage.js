@@ -1,11 +1,12 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import Layout from "./../components/Layout/Layout";
 import axios from "axios";
 import toast from "react-hot-toast";
 import { Checkbox, Radio } from "antd";
 import { Prices } from "./../components/Prices";
 import { useNavigate } from "react-router-dom";
-import { useCart } from "../context/cart";
+import { CartContext } from "../context/cart";
+// import { useCart } from "../context/cart";
 
 const HomePage = () => {
   const [products, setProducts] = useState([]);
@@ -16,7 +17,9 @@ const HomePage = () => {
   const [page, setPage] = useState(1);
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
-  const [cart, setCart] = useCart();
+
+  const { cart, addToCart } = useContext(CartContext);
+  // const [cart, setCart] = useCart();
   //get all category
   const getAllCategory = async () => {
     try {
@@ -113,6 +116,12 @@ const HomePage = () => {
       console.log(error);
     }
   };
+  function formatCurrency(amount) {
+    return amount.toLocaleString("vi-VN", {
+      style: "currency",
+      currency: "VND",
+    });
+  }
   return (
     <Layout title={"All product - Best deal "}>
       <div className="container-fluid row mt-3 justify-content-center">
@@ -166,7 +175,7 @@ const HomePage = () => {
                   <p className="card-text">
                     {p.description.substring(0, 30)}...
                   </p>
-                  <p className="card-text">{p.price} VNĐ</p>
+                  <p className="card-text">{formatCurrency(p.price)}</p>
                   <button
                     onClick={() => navigate(`/product/${p.slug}`)}
                     className="btn btn-primary ms-1"
@@ -175,12 +184,8 @@ const HomePage = () => {
                   </button>
                   <button
                     onClick={() => {
-                      setCart([...cart, p]);
-                      localStorage.setItem(
-                        "cart",
-                        JSON.stringify([...cart, p])
-                      );
-                      toast.success("Item added to cart");
+                      addToCart(p);
+                      toast.success("Thêm vào giỏ hàng thành công");
                     }}
                     className="btn btn-secondary ms-1"
                   >

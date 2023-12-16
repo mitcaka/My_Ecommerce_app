@@ -8,6 +8,10 @@ import {
   getOrders,
   getAllOrders,
   orderStatusController,
+  getAllUsers,
+  getBudget,
+  countSuccsessOrder,
+  totalMoney,
 } from "../controllers/authController.js";
 import { requireSignIn, isAdmin } from "../middlewares/authMiddleware.js";
 
@@ -53,5 +57,16 @@ router.put(
   isAdmin,
   orderStatusController
 );
+
+//all orders
+router.get("/all-users", requireSignIn, isAdmin, getAllUsers);
+
+//budget
+router.get("/budget", requireSignIn, isAdmin, getBudget);
+
+//StatisUser
+router.get("/susscess-order", requireSignIn, isAdmin, countSuccsessOrder);
+
+router.get("/total-money", requireSignIn, isAdmin, totalMoney);
 
 export default router;

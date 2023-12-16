@@ -1,50 +1,58 @@
 import React from "react";
 import { DataGrid, GridColDef, GridValueGetterParams } from "@mui/x-data-grid";
 
-const OrderDetails = ({ products }) => {
-  console.log(products);
-  const getRowId = (row) => row._id;
+const OrderDetails = ({ orderItems }) => {
+  console.log(orderItems);
+  const getRowId = (row) => row.product._id;
   const columns = [
     {
       field: "image",
       headerName: "Hình ảnh",
-      width: 150,
+      width: 80,
       renderCell: (params) => (
         <img
-          src={`${process.env.REACT_APP_API}/api/v1/product/product-photo/${params.row._id}`}
+          src={`${process.env.REACT_APP_API}/api/v1/product/product-photo/${params.row.product._id}`}
           className="card-img-top"
-          alt={params.row.name}
+          alt={params.row.product.name}
           style={{
-            width: "100px",
-            height: "100px",
+            width: "50px",
+            height: "50px",
             objectFit: "cover",
           }}
         />
       ),
     },
-    { field: "name", headerName: "Tên sản phẩm", width: 130 },
-    { field: "price", headerName: "Giá sản phẩm", width: 180 },
-    // {
-    //   field: "payment",
-    //   headerName: "Thanh toán",
-    //   width: 150,
-    //   valueGetter: (params) => {
-    //     return params.row.payment.success ? "Thành công" : "Thất bại";
-    //   },
-    // },
-    // {
-    //   field: "products.length",
-    //   headerName: "Tổng tiền",
-    //   width: 130,
-    //   valueGetter: (params) => {
-    //     return params.row.payment.success ? "Thành công" : "Thất bại";
-    //   },
-    // },
+    {
+      field: "product.name",
+      headerName: "Tên sản phẩm",
+      width: 180,
+      valueGetter: (params) => params.row.product.name,
+    },
+    {
+      field: "price",
+      headerName: "Giá sản phẩm",
+      width: 100,
+      valueGetter: (params) => formatCurrency(params.row.product.price),
+    },
+    {
+      field: "quantity",
+      headerName: "Số lượng",
+      width: 150,
+      valueGetter: (params) => {
+        return params.row.quantity;
+      },
+    },
   ];
+  function formatCurrency(amount) {
+    return amount.toLocaleString("vi-VN", {
+      style: "currency",
+      currency: "VND",
+    });
+  }
   return (
     <>
       <DataGrid
-        rows={products}
+        rows={orderItems}
         columns={columns}
         getRowId={getRowId}
         initialState={{

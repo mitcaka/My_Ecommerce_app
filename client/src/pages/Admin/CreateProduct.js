@@ -5,6 +5,9 @@ import toast from "react-hot-toast";
 import axios from "axios";
 import { Select } from "antd";
 import { useNavigate } from "react-router-dom";
+import Typography from "@mui/material/Typography";
+import Button from "@mui/material/Button";
+
 const { Option } = Select;
 
 const CreateProduct = () => {
@@ -65,18 +68,18 @@ const CreateProduct = () => {
   };
 
   return (
-    <Layout title={"Dashboard - Create Product"}>
+    <Layout title={"Quản lý - thêm sản phẩm"}>
       <div className="container-fluid m-3 p-3">
         <div className="row">
           <div className="col-md-3">
             <AdminMenu />
           </div>
-          <div className="col-md-9">
-            <h1>Create Product</h1>
+          <div className="col-md-9 justify-content-center">
+            <Typography variant="h4">Thêm sản phẩm</Typography>
             <div className="m-1 w-75">
               <Select
                 bordered={false}
-                placeholder="Select a category"
+                placeholder="Chọn danh mục"
                 size="large"
                 showSearch
                 className="form-select mb-3"
@@ -92,7 +95,7 @@ const CreateProduct = () => {
               </Select>
               <div className="mb-3">
                 <label className="btn btn-outline-secondary col-md-12">
-                  {photo ? photo.name : "Upload Photo"}
+                  {photo ? photo.name : "Tải lên hình ảnh"}
                   <input
                     type="file"
                     name="photo"
@@ -118,7 +121,7 @@ const CreateProduct = () => {
                 <input
                   type="text"
                   value={name}
-                  placeholder="write a name"
+                  placeholder="Tên sản phẩm"
                   className="form-control"
                   onChange={(e) => setName(e.target.value)}
                 />
@@ -127,7 +130,7 @@ const CreateProduct = () => {
                 <textarea
                   type="text"
                   value={description}
-                  placeholder="write a description"
+                  placeholder="Mô tả sản phẩm"
                   className="form-control"
                   onChange={(e) => setDescription(e.target.value)}
                 />
@@ -137,7 +140,7 @@ const CreateProduct = () => {
                 <input
                   type="number"
                   value={price}
-                  placeholder="write a Price"
+                  placeholder="Giá tiền"
                   className="form-control"
                   onChange={(e) => setPrice(e.target.value)}
                 />
@@ -146,30 +149,19 @@ const CreateProduct = () => {
                 <input
                   type="number"
                   value={quantity}
-                  placeholder="write a quantity"
+                  placeholder="Số lượng"
                   className="form-control"
                   onChange={(e) => setQuantity(e.target.value)}
                 />
               </div>
               <div className="mb-3">
-                <Select
-                  bordered={false}
-                  placeholder="Select Shipping "
-                  size="large"
-                  showSearch
-                  className="form-select mb-3"
-                  onChange={(value) => {
-                    setShipping(value);
-                  }}
+                <Button
+                  variant="contained"
+                  color="success"
+                  onClick={handleCreate}
                 >
-                  <Option value="0">No</Option>
-                  <Option value="1">Yes</Option>
-                </Select>
-              </div>
-              <div className="mb-3">
-                <button className="btn btn-primary" onClick={handleCreate}>
-                  CREATE PRODUCT
-                </button>
+                  Thêm sản phẩm
+                </Button>
               </div>
             </div>
           </div>
