@@ -6,6 +6,9 @@ import { Checkbox, Radio } from "antd";
 import { Prices } from "./../components/Prices";
 import { useNavigate } from "react-router-dom";
 import { CartContext } from "../context/cart";
+import { Fade } from "react-slideshow-image";
+import "react-slideshow-image/dist/styles.css";
+import "../styles/Homepage.css";
 // import { useCart } from "../context/cart";
 
 const HomePage = () => {
@@ -122,9 +125,27 @@ const HomePage = () => {
       currency: "VND",
     });
   }
+  const fadeImages = [
+    {
+      url: "https://sieuthicamerahanoi.com/wp-content/uploads/2019/09/camera-ezviz-banner-sieuthicamerahanoi.com_-1.png",
+    },
+    {
+      url: "https://phuongviethcm.com/wp-content/uploads/2020/05/banner-camera-wifi-ezviz-new-2.jpg",
+    },
+  ];
   return (
     <Layout title={"Trang sản phẩm"}>
-      <div className="container-fluid row mt-3 justify-content-center">
+      <div className="container-fluid row mt-3 justify-content-center home-page">
+        <div className="slide-container">
+          <Fade>
+            {fadeImages.map((fadeImage, index) => (
+              <div key={index}>
+                <img style={{ width: "100%" }} src={fadeImage.url} />
+                <h2>{fadeImage.caption}</h2>
+              </div>
+            ))}
+          </Fade>
+        </div>
         <div className="col-md-3">
           <div style={{ border: "1px solid gray", padding: "10px" }}>
             <h4 className="text-center">Tìm theo danh mục</h4>
@@ -171,26 +192,32 @@ const HomePage = () => {
                   alt={p.name}
                 />
                 <div className="card-body">
-                  <h5 className="card-title">{p.name}</h5>
+                  <div className="card-name-price">
+                    <h5 className="card-title">{p.name}</h5>
+                    <h5 className="card-title card-price">
+                      {formatCurrency(p.price)}
+                    </h5>
+                  </div>
                   <p className="card-text">
                     {p.description.substring(0, 30)}...
                   </p>
-                  <p className="card-text">{formatCurrency(p.price)}</p>
-                  <button
-                    onClick={() => navigate(`/product/${p.slug}`)}
-                    className="btn btn-primary ms-1"
-                  >
-                    Chi tiết
-                  </button>
-                  <button
-                    onClick={() => {
-                      addToCart(p);
-                      toast.success("Thêm vào giỏ hàng thành công");
-                    }}
-                    className="btn btn-secondary ms-1"
-                  >
-                    Thêm vào giỏ
-                  </button>
+                  <div className="card-name-price">
+                    <button
+                      onClick={() => navigate(`/product/${p.slug}`)}
+                      className="btn btn-primary ms-1"
+                    >
+                      Chi tiết
+                    </button>
+                    <button
+                      onClick={() => {
+                        addToCart(p);
+                        toast.success("Thêm vào giỏ hàng thành công");
+                      }}
+                      className="btn btn-secondary ms-1"
+                    >
+                      Thêm vào giỏ
+                    </button>
+                  </div>
                 </div>
               </div>
             ))}
@@ -198,11 +225,12 @@ const HomePage = () => {
           <div className="m-2 p-3">
             {products && products.length < total && (
               <button
-                className="btn btn-warning"
+                className="btn btn-warning custom-button"
                 onClick={(e) => {
                   e.preventDefault();
                   setPage(page + 1);
                 }}
+                style={{ width: "200px" }}
               >
                 {loading ? "Loading ..." : "Xem thêm"}
               </button>

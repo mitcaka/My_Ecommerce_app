@@ -17,7 +17,7 @@ const SearchProduct = () => {
   }
   return (
     <Layout title={"Kết quả tìm kiếm"}>
-      <div className="container">
+      <div className="container home-page">
         <div className="text-center">
           <h1>Kết quả tìm kiếm</h1>
           <h6>
@@ -27,33 +27,40 @@ const SearchProduct = () => {
           </h6>
           <div className="d-flex flex-wrap mt-4">
             {values?.results.map((p) => (
-              <div className="card m-2" style={{ width: "18rem" }}>
+              <div className="card m-2" style={{ width: "20rem" }}>
                 <img
                   src={`${process.env.REACT_APP_API}/api/v1/product/product-photo/${p._id}`}
                   className="card-img-top"
+                  style={{ width: "100%", height: "100%", objectFit: "cover" }}
                   alt={p.name}
                 />
                 <div className="card-body">
-                  <h5 className="card-title">{p.name}</h5>
+                  <div className="card-name-price">
+                    <h5 className="card-title">{p.name}</h5>
+                    <h5 className="card-title card-price">
+                      {formatCurrency(p.price)}
+                    </h5>
+                  </div>
                   <p className="card-text">
                     {p.description.substring(0, 30)}...
                   </p>
-                  <p className="card-text"> {formatCurrency(p.price)}</p>
-                  <button
-                    onClick={() => navigate(`/product/${p.slug}`)}
-                    class="btn btn-primary ms-1"
-                  >
-                    Xem chi tiết
-                  </button>
-                  <button
-                    onClick={() => {
-                      addToCart(p);
-                      toast.success("Thêm vào giỏ hàng thành công");
-                    }}
-                    className="btn btn-secondary ms-1"
-                  >
-                    Thêm vào giỏ
-                  </button>
+                  <div className="card-name-price">
+                    <button
+                      onClick={() => navigate(`/product/${p.slug}`)}
+                      className="btn btn-primary ms-1"
+                    >
+                      Chi tiết
+                    </button>
+                    <button
+                      onClick={() => {
+                        addToCart(p);
+                        toast.success("Thêm vào giỏ hàng thành công");
+                      }}
+                      className="btn btn-secondary ms-1"
+                    >
+                      Thêm vào giỏ
+                    </button>
+                  </div>
                 </div>
               </div>
             ))}
