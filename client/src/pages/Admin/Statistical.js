@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import AdminMenu from "../../components/Layout/AdminMenu";
-import Layout from "./../../components/Layout/Layout";
+import Layout from "../../components/Layout/Layout";
 
 import { Box, Container, Unstable_Grid2 as Grid } from "@mui/material";
 import { OverviewBudget } from "../../sections/overview/overview-budget";

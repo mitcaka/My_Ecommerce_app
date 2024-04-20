@@ -1,5 +1,5 @@
 import React, { useContext } from "react";
-import Layout from "./../components/Layout/Layout";
+import Layout from "../components/Layout/Layout";
 import { useSearch } from "../context/Search";
 import { useNavigate } from "react-router-dom";
 import { CartContext } from "../context/cart";

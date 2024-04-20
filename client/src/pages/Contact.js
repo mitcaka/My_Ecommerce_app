@@ -1,5 +1,5 @@
 import React from "react";
-import Layout from "./../components/Layout/Layout";
+import Layout from "../components/Layout/Layout";
 import AttachEmailIcon from "@mui/icons-material/AttachEmail";
 import BusinessIcon from "@mui/icons-material/Business";
 import ContactPhoneIcon from "@mui/icons-material/ContactPhone";
