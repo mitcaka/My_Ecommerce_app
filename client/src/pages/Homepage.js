@@ -1,9 +1,9 @@
 import React, { useState, useEffect, useContext } from "react";
-import Layout from "./../components/Layout/Layout";
+import Layout from "../components/Layout/Layout";
 import axios from "axios";
 import toast from "react-hot-toast";
 import { Checkbox, Radio } from "antd";
-import { Prices } from "./../components/Prices";
+import { Prices } from "../components/Prices";
 import { useNavigate } from "react-router-dom";
 import { CartContext } from "../context/cart";
 import { Fade } from "react-slideshow-image";
@@ -127,10 +127,10 @@ const HomePage = () => {
   }
   const fadeImages = [
     {
-      url: "https://sieuthicamerahanoi.com/wp-content/uploads/2019/09/camera-ezviz-banner-sieuthicamerahanoi.com_-1.png",
+      url: "https://file.hstatic.net/1000332761/collection/banner_website_do_choi_tre_em_024dca23e61d409dbb18e6463ae7c5e8.jpg",
     },
     {
-      url: "https://phuongviethcm.com/wp-content/uploads/2020/05/banner-camera-wifi-ezviz-new-2.jpg",
+      url: "https://winfun.vn/media/data/tin-tuc/bannerwinfun1-1392x435.jpg",
     },
   ];
   return (
@@ -198,9 +198,6 @@ const HomePage = () => {
                       {formatCurrency(p.price)}
                     </h5>
                   </div>
-                  <p className="card-text">
-                    {p.description.substring(0, 30)}...
-                  </p>
                   <div className="card-name-price">
                     <button
                       onClick={() => navigate(`/product/${p.slug}`)}

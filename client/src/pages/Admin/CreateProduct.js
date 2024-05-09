@@ -7,6 +7,8 @@ import { Select } from "antd";
 import { useNavigate } from "react-router-dom";
 import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
+import { CKEditor } from '@ckeditor/ckeditor5-react';
+import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 
 const { Option } = Select;
 
@@ -127,12 +129,14 @@ const CreateProduct = () => {
                 />
               </div>
               <div className="mb-3">
-                <textarea
-                  type="text"
-                  value={description}
-                  placeholder="Mô tả sản phẩm"
-                  className="form-control"
-                  onChange={(e) => setDescription(e.target.value)}
+                <CKEditor
+                    editor={ ClassicEditor }
+                    data={description}
+                    placeholder="Mô tả sản phẩm"
+                    onChange={ (event,editor) => {
+                      const data = editor.getData();
+                      setDescription(data);
+                    }}
                 />
               </div>
 

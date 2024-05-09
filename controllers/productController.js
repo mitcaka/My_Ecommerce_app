@@ -388,6 +388,7 @@ export const braintreePayment = async (req, res) => {
   }
 };
 
+//Order
 export const orderPayment = async (req, res) => {
   try {
     const { cart } = req.body;
@@ -438,5 +439,40 @@ export const orderPayment = async (req, res) => {
   } catch (error) {
     console.log(error);
     res.status(500).json({ success: false, message: "Internal server error." });
+  }
+};
+
+
+//payos
+export const payosPayment = async (req, res) => {
+  try {
+    const YOUR_DOMAIN = `http://localhost:3000`;
+    const body = {
+        orderCode: Number(String(Date.now()).slice(-6)),
+        amount: 2000,
+        description: 'Thanh toán đơn hàng đồ chơi',
+        returnUrl: `${YOUR_DOMAIN}/successpage`,
+        cancelUrl: `${YOUR_DOMAIN}/failpage`
+    };
+
+    try {
+        const paymentLinkResponse = await payOS.createPaymentLink(body);
+        console.log(paymentLinkResponse.checkoutUrl);
+        res.redirect(paymentLinkResponse.checkoutUrl);  
+    } catch (error) {
+        console.error(error);
+        res.send('Something went error');
+    }
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const receiveHook = async (req, res) => {
+  try {
+    console.log(req.body);
+    res.json();
+  } catch (error) {
+    console.log(error);
   }
 };

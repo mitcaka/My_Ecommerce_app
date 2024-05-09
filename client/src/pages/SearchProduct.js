@@ -41,9 +41,7 @@ const SearchProduct = () => {
                       {formatCurrency(p.price)}
                     </h5>
                   </div>
-                  <p className="card-text">
-                    {p.description.substring(0, 30)}...
-                  </p>
+
                   <div className="card-name-price">
                     <button
                       onClick={() => navigate(`/product/${p.slug}`)}

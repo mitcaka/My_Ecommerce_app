@@ -34,9 +34,9 @@ app.get("/", (req, res) => {
   res.send("<h1>Mit lam MERN stack</h1>");
 });
 
-app.use("*", function (req, res) {
-  res.sendFile(path.join(__dirname, "client/build/index.html"));
-});
+// app.use("*", function (req, res) {
+//   res.sendFile(path.join(__dirname, "client/build/index.html"));
+// });
 
 //Port
 const PORT = process.env.PORT || 8080;

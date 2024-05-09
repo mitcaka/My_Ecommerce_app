@@ -22,6 +22,8 @@ import SearchProduct from "./pages/SearchProduct";
 import ProductDetails from "./pages/ProductDetails";
 import Categories from "./pages/Categories";
 import CategoryProduct from "./pages/CategoryProduct";
+import SuccessPage from "./pages/SuccessPage";
+import FailurePage from "./pages/FailurePage";
 import CartPage from "./pages/CartPage";
 import AdminOrders from "./pages/Admin/AdminOrder";
 import Statistical from "./pages/Admin/Statistical";
@@ -35,6 +37,8 @@ function App() {
         <Route path="/category/:slug" element={<CategoryProduct />} />
         <Route path="/product/:slug" element={<ProductDetails />} />
         <Route path="/search" element={<SearchProduct />} />
+        <Route path="/failpage" element={<FailurePage />} />
+        <Route path="/successpage" element={<SuccessPage />} />
         <Route path="/dashboard" element={<PrivateRoute />}>
           <Route path="user" element={<Dashboard />} />
           <Route path="user/orders" element={<Orders />} />

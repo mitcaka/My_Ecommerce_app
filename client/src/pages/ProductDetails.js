@@ -50,27 +50,27 @@ const ProductDetails = () => {
       console.log(error);
     }
   };
+  const formattedPrice = new Intl.NumberFormat("vi-VN", {
+    style: "currency",
+    currency: "VND",
+  }).format(product.price);
   return (
     <Layout>
-      <div className="row container justify-content-center mt-5">
-        <div className="col-md-4">
-          <img
-            src={`${process.env.REACT_APP_API}/api/v1/product/product-photo/${product._id}`}
-            className="card-img-top"
-            alt={product.name}
-            height="300"
-            width={"350px"}
-          />
+      <div className="row justify-content-center mt-5">
+        <div className="col-md-3">
+        <img
+          src={`${process.env.REACT_APP_API}/api/v1/product/product-photo/${product._id}`}
+          className="card-img-top with-border"
+          alt={product.name}
+        />
+
         </div>
         <div className="col-md-6 ">
           <Typography variant="h4" className="p-2">
             {product.name}
           </Typography>
-          <Typography variant="body1" className="p-2">
-            {product.description}
-          </Typography>
           <Typography variant="h5" className="p-2">
-            Giá tiền : <strong>{product.price}</strong>
+            Giá tiền : <strong>{formattedPrice}</strong>
           </Typography>
           <h6 className="p-2">Danh mục : {product?.category?.name}</h6>
           <button
@@ -78,14 +78,37 @@ const ProductDetails = () => {
               addToCart(product);
               toast.success("Thêm vào giỏ hàng thành công");
             }}
-            className="btn btn-danger ms-1 p-2"
-          >
-            Thêm vào giỏ
-          </button>
+            className="btn btn-success ms-1 p-2"
+          > 
+           🛒 Thêm vào giỏ
+          </button><br/>
+          <div class="div-khuyen-mai"> 
+            <div class="km">📣 ƯU ĐÃI PHÍ SHIP</div> 
+            <p>✅<strong>TRỢ PHÍ SHIP TỐI ĐA 15K CHO ĐƠN TỪ 150K</strong></p>
+            <p>✅<strong>GIAO HÀNG 3-5 NGÀY (HỖ TRỢ SHIP COD)</strong></p>
+            <p>✅<strong>BẢO HÀNH MẢNH GHÉP - GIẤY LẮP RÁP CÁC SẢN PHẨM LEGO</strong></p>
+          </div>
+
         </div>
+        <div className="row container justify-content-center mt-5">
+          <div className="col-md-2 text-center"  style={{ maxWidth: "100%", overflow: "hidden" }}>
+            <img src="/images/2.png" alt="product_photo" style={{ maxWidth: "100%", height: "auto" }}/>
+          </div>
+          <div className="col-md-8">
+            <div className="row container-fluid">
+            <div dangerouslySetInnerHTML={{ __html: product.description }} />
+          </div>
+          
+          </div>
+          <div className="col-md-2 text-center"  style={{ maxWidth: "100%", overflow: "hidden" }}>
+            <img src="/images/3.png" alt="product_photo" style={{ maxWidth: "100%", height: "auto" }}/>
+        </div>
+            
+        </div>
+
       </div>
       <hr />
-      <div className="row container">
+      <div className="row justify-content-center mt-5">
         <h6>Sản phẩm tương tự</h6>
         {relatedProducts.length < 1 && (
           <p className="text-center">Không tìm thấy sản phẩm tương tự</p>
@@ -100,15 +123,14 @@ const ProductDetails = () => {
               />
               <div className="card-body">
                 <h5 className="card-title">{p.name}</h5>
-                <p className="card-text">{p.description.substring(0, 30)}...</p>
-                <p className="card-text">$ {p.price}</p>
+                <p className="card-text"><strong>{formattedPrice}</strong></p>
                 <button
                   className="btn btn-primary ms-1"
                   onClick={() => navigate(`/product/${p.slug}`)}
                 >
-                  More Details
+                  Chi tiết
                 </button>
-                <button class="btn btn-secondary ms-1">ADD TO CART</button>
+                <button class="btn btn-secondary ms-1">Thêm vào giỏ</button>
               </div>
             </div>
           ))}
@@ -117,5 +139,4 @@ const ProductDetails = () => {
     </Layout>
   );
 };
-
 export default ProductDetails;

@@ -3,6 +3,7 @@ import Footer from "./Footer";
 import Header from "./Header";
 import { Helmet } from "react-helmet";
 import { Toaster } from "react-hot-toast";
+import Chatbot from './Chatbot'
 const Layout = ({ children, title, description, keywords, author }) => {
   return (
     <div>
@@ -14,11 +15,13 @@ const Layout = ({ children, title, description, keywords, author }) => {
         <title>{title}</title>
       </Helmet>
       <Header />
-      <main style={{ minHeight: "70vh" }}>
+      <main style={{ minHeight: "70vh" }} className="container-fluid">
         <Toaster />
 
         {children}
+        
       </main>
+      <Chatbot />
       <Footer />
     </div>
   );

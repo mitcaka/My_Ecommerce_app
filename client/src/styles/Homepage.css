@@ -16,7 +16,7 @@
   width: 18rem;
 }
 .home-page .card-name-price {
-  display: flex;
+  /* display: flex; */
   flex-direction: row;
   justify-content: space-between;
 }

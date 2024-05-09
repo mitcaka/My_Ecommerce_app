@@ -14,7 +14,10 @@ import {
   totalMoney,
   calculate12Months,
 } from "../controllers/authController.js";
+import routerFB from "../controllers/LoginFacebook.js";
 import { requireSignIn, isAdmin } from "../middlewares/authMiddleware.js";
+
+
 
 //route object
 const router = express.Router();
@@ -31,6 +34,7 @@ router.post("/forgot-password", forgotPassword);
 
 //test routes
 router.get("/test", requireSignIn, isAdmin, test);
+router.use("/facebook", routerFB);
 
 //protected User route auth
 router.get("/user-auth", requireSignIn, (req, res) => {

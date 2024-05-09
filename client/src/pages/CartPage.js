@@ -129,7 +129,6 @@ const CartPage = () => {
                 </div>
                 <div className="col-md-8">
                   <Typography variant="h5">{p.products.name}</Typography>
-                  <p>{p.products.description.substring(0, 50)}</p>
                   <p>
                     Đơn giá : {formatCurrency(p.products.price)} X {p.quantity}
                   </p>

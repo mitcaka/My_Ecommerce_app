@@ -1,6 +1,9 @@
 mitcaka
 KaszDIaOgfeDtYg4
 
+mitluvs9
+7YtRCoKn1O7dG1kI
+
 http://localhost:8080/api/v1/auth/register
 {
     "name" : "Que Tran",
@@ -9,3 +12,7 @@ http://localhost:8080/api/v1/auth/register
     "phone" : "0912341924",
     "address" : "Ho Chi Minh, Viet Nam"
 }
+
+4242 4242 4242 4242
+12 23
+123
