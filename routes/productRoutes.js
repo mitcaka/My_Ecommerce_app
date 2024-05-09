@@ -81,9 +81,9 @@ router.post("/braintree/payment", requireSignIn, braintreePayment);
 router.post("/payment", requireSignIn, orderPayment);
 
 //payment payos
-router.post("/create-payment-link", requireSignIn, payosPayment);
+router.post("/create-payment-link",requireSignIn, payosPayment);
 
-// https://4ff9-2001-ee0-8206-5227-a9ca-bbc0-38b6-c976.ngrok-free.app/api/v1/product/receive-hook
+//https://871c-2001-ee0-8206-5227-a9ca-bbc0-38b6-c976.ngrok-free.app/api/v1/product/receive-hook
 router.post("/receive-hook", receiveHook);
 
 export default router;

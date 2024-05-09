@@ -88,6 +88,25 @@ const CartPage = () => {
     }
   };
 
+  const handlePayos = async () => {
+    try {
+        setLoading(true);
+        const { data } = await axios.post(
+            `${process.env.REACT_APP_API}/api/v1/product/create-payment-link`,
+            {
+                cart,
+            }
+        );
+        const checkoutUrl = data.link;
+        window.open(checkoutUrl, '_blank');
+        setLoading(false);
+    } catch (error) {
+        console.log(error);
+        setLoading(false);
+    }
+}
+
+
   function formatCurrency(amount) {
     return amount.toLocaleString("vi-VN", {
       style: "currency",
@@ -214,9 +233,19 @@ const CartPage = () => {
                     onClick={handlePayment}
                     disabled={loading || !instance || !auth?.user?.address}
                   >
-                    {loading ? "Đang tiến hành ...." : "Thanh toán thẻ"}
+                    {loading ? "Đang tiến hành ...." : "Thanh toán thẻ quốc tế"}
                   </Button>
-
+                  <Button
+                    variant="contained"
+                    color="secondary"
+                    className="m-2"
+                    onClick={handlePayos}
+                    disabled={loading || !instance || !auth?.user?.address}
+                  >
+                    {loading
+                      ? "Đang tiến hành ...."
+                      : "Thanh toán thẻ nội địa"}
+                  </Button>
                   <Button
                     variant="contained"
                     color="success"

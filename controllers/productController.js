@@ -5,16 +5,12 @@ import fs from "fs";
 import slugify from "slugify";
 import braintree from "braintree";
 import dotenv from "dotenv";
+import PayOS from "@payos/node";
+import cors from 'cors';
 
 dotenv.config();
 
-//payment gateway
-var gateway = new braintree.BraintreeGateway({
-  environment: braintree.Environment.Sandbox,
-  merchantId: process.env.BRAINTREE_MERCHANT_ID,
-  publicKey: process.env.BRAINTREE_PUBLIC_KEY,
-  privateKey: process.env.BRAINTREE_PRIVATE_KEY,
-});
+
 
 //create product
 export const createProduct = async (req, res) => {
@@ -332,6 +328,13 @@ export const productCategory = async (req, res) => {
 };
 
 //payment gateway api
+//payment gateway
+var gateway = new braintree.BraintreeGateway({
+  environment: braintree.Environment.Sandbox,
+  merchantId: process.env.BRAINTREE_MERCHANT_ID,
+  publicKey: process.env.BRAINTREE_PUBLIC_KEY,
+  privateKey: process.env.BRAINTREE_PRIVATE_KEY,
+});
 //token
 export const braintreeToken = async (req, res) => {
   try {
@@ -355,7 +358,6 @@ export const braintreePayment = async (req, res) => {
     cart.map((i) => {
       total += i.products.price * i.quantity;
     });
-
     const exchangeRate = 0.000041;
     const usd = Math.round(total * exchangeRate * 100) / 100;
     console.log(usd);
@@ -444,35 +446,89 @@ export const orderPayment = async (req, res) => {
 
 
 //payos
+const payOS = new PayOS(process.env.PAYOS_CLIENT_ID, process.env.PAYOS_API_KEY, process.env.PAYOS_CHECKSUM_KEY);
 export const payosPayment = async (req, res) => {
   try {
+    const { cart } = req.body;
+
+    // Kiểm tra số lượng sản phẩm trước khi giảm
+    for (const item of cart) {
+      const product = await productModel.findById(item.products._id);
+      if (!product) {
+        return res.status(404).json({
+          success: false,
+          message: `Không tìm thấy sản phẩm có mã: ${item.products._id}`,
+        });
+      }
+      if (product.quantity < item.quantity) {
+        return res.status(400).json({
+          success: false,
+          message: `Mua quá số lượng tong cửa hàng`,
+        });
+      }
+    }
+
+    const order = await new orderModel({
+      orderItems: cart.map((item) => ({
+        quantity: item.quantity,
+        product: item.products._id,
+      })),
+      payment: {
+        success: false,
+      },
+      status: "Chưa xử lý",
+      buyer: req.user._id,
+    }).save();
+
+    // Giảm số lượng sản phẩm trong giỏ hàng
+    await Promise.all(
+      cart.map(async (item) => {
+        await productModel.findByIdAndUpdate(
+          item.products._id,
+          {
+            $inc: { quantity: -item.quantity },
+          },
+          { new: true }
+        );
+      })
+    );
+    const orderId = order._id
     const YOUR_DOMAIN = `http://localhost:3000`;
     const body = {
         orderCode: Number(String(Date.now()).slice(-6)),
         amount: 2000,
-        description: 'Thanh toán đơn hàng đồ chơi',
+        description: orderId,
         returnUrl: `${YOUR_DOMAIN}/successpage`,
-        cancelUrl: `${YOUR_DOMAIN}/failpage`
+        cancelUrl: `${YOUR_DOMAIN}/failpage`,
+        buyerName: req.user.name,
+        buyerEmail: req.user.email,
+        buyerPhone: req.user.phone,
+        buyerAddress: req.user.address,
     };
-
-    try {
-        const paymentLinkResponse = await payOS.createPaymentLink(body);
-        console.log(paymentLinkResponse.checkoutUrl);
-        res.redirect(paymentLinkResponse.checkoutUrl);  
+        const paymentLinkResponse = await payOS.createPaymentLink(body);;  
+        res.json({link : paymentLinkResponse.checkoutUrl});  
     } catch (error) {
         console.error(error);
-        res.send('Something went error');
+        res.send('Lỗi thanh toán rồi');
     }
-  } catch (error) {
-    console.log(error);
-  }
 };
 
 export const receiveHook = async (req, res) => {
-  try {
-    console.log(req.body);
+    console.log(req.body)
     res.json();
+    if (req.body.success === true) {
+      const parts = req.body.data.description.split(" ");
+      const orderId = parts[1];
+      const order = await orderModel.findOneAndUpdate(
+        { _id: orderId },
+        { $set: { "payment.success": true } }
+      );
+    } else {
+        console.log("Giao dịch không thành công");
+        console.log("Lý do: ", req.body.desc);
+    }
+    try {
   } catch (error) {
     console.log(error);
   }
-};
+}; 

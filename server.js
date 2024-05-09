@@ -5,7 +5,7 @@ import morgan from "morgan";
 import connectDB from "./config/db.js";
 import authRoutes from "./routes/authRoute.js";
 import cors from "cors";
-import path from "path";
+import session from 'express-session';
 import categoryRoutes from "./routes/categoryRoutes.js";
 import productRoutes from "./routes/productRoutes.js";
 
@@ -22,7 +22,12 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 app.use(morgan("dev"));
-// app.use(express.static(path.join(__dirname, "./client/build")));
+app.use(session({
+  secret: 'mitsecretkey',
+  resave: false,
+  saveUninitialized: false,
+  cookie: { secure: false }
+}));
 
 //routes
 app.use("/api/v1/auth", authRoutes);
