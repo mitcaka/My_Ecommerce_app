@@ -35,5 +35,5 @@ const userSchema = new mongoose.Schema(
   },
   { timestamps: true }
 );
-
+//Mit
 export default mongoose.model("users", userSchema);

@@ -83,7 +83,7 @@ router.post("/payment", requireSignIn, orderPayment);
 //payment payos
 router.post("/create-payment-link",requireSignIn, payosPayment);
 
-//https://871c-2001-ee0-8206-5227-a9ca-bbc0-38b6-c976.ngrok-free.app/api/v1/product/receive-hook
+//https://cc93-2401-d800-2e11-1733-db0-3c95-afd1-2a.ngrok-free.app/api/v1/product/receive-hook
 router.post("/receive-hook", receiveHook);
 
 export default router;
